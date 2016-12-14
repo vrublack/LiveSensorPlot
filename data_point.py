@@ -18,12 +18,17 @@ class DataPoint:
 
     @staticmethod
     def from_str(serialized):
-        comps = serialized.split(',')
-        if len(comps) != 5:
+        try:
+            comps = serialized.split(',')
+            if len(comps) != 5:
+                return None
+            x = float(comps[1])
+            y = float(comps[2])
+            z = float(comps[3])
+            time = float(comps[4])
+            sensor_type = comps[0]
+        except:
+            print('Error in line ' + serialized)
             return None
-        x = float(comps[1])
-        y = float(comps[2])
-        z = float(comps[3])
-        time = float(comps[4])
-        sensor_type = comps[0]
+
         return DataPoint(x, y, z, time, sensor_type)
