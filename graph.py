@@ -28,7 +28,8 @@ class Plot:
 
         i = self.ptr % self.chunkSize
         if i == 0:
-            curve = self.plot.plot()
+            pen=pyqtgraph.mkPen(color='r')
+            curve = self.plot.plot(pen=pen)
             self.curves.append(curve)
             last = self.data[-1]
             data5 = np.empty((self.chunkSize + 1, 2))
@@ -51,11 +52,13 @@ class Graph:
         self.win.setWindowTitle('HMI Sensors')
         self.next_sample = next_sample
 
-        self.acc_x = Plot(self.win.addPlot(colspan=2), 'Acc x', 'g-force')
+        pyqtgraph.setConfigOption('background', 'w')
+
+        self.acc_x = Plot(self.win.addPlot(), 'Acc x', 'force (g)')
         self.win.nextRow()
-        self.acc_y = Plot(self.win.addPlot(colspan=2), 'Acc y', 'g-force')
+        self.acc_y = Plot(self.win.addPlot(), 'Acc y', 'force (g)')
         self.win.nextRow()
-        self.acc_z = Plot(self.win.addPlot(colspan=2), 'Acc z', 'g-force')
+        self.acc_z = Plot(self.win.addPlot(), 'Acc z', 'force (g)')
 
     # update all plots
     def update(self):
@@ -67,7 +70,7 @@ class Graph:
     def start(self):
         timer = pg.QtCore.QTimer()
         timer.timeout.connect(self.update)
-        timer.start(1)
+        timer.start(10)
 
         ## Start Qt event loop unless running in interactive mode or using pyside.
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
